@@ -6,7 +6,9 @@
     "scripts": {
         "start": "node src/main",
         "test": "jest",
-        "test-jenkins": "jest --reporters=default --reporters=jest-junit"
+        "test-jenkins": "jest --reporters=default --reporters=jest-junit",
+        "coverage-jenkins": "jest --reporters=default --reporters=jest-junit --coverage --coverageReporters=text --coverageReporters=html --coverageDirectory=./coverage/",
+        "lint": "eslint src/**/*.js -f checkstyle -o coverage/eslint-result.xml"
     },
     "jest-junit": {
         "outputDirectory": "./coverage/",
@@ -19,9 +21,12 @@
         "express": "^4.17.3"
     },
     "devDependencies": {
+        "eslint": "^8.10.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-prettier": "^4.0.0",
+        "prettier": "^2.5.1",
         "jest": "^27.5.1",
         "jest-junit": "^13.0.0",
         "supertest": "^6.2.2"
     }
-
 }
