@@ -57,6 +57,16 @@ pipeline {
         steps{
             sh 'echo "End-to-end Tests passed"'
         }
-    }   
+    }
+    stage("Push image") {
+        steps {
+            script {
+                docker.withRegistry('https://'+ CONTAINER_REGISTRY, 'gcr:'+ GOOGLE_CLOUD_PROJECT) {
+                        dockerImage.push("latest")
+                        dockerImage.push("${env.BUILD_ID}")
+                }
+            }
+        }
+    }       
   }
 }
