@@ -71,9 +71,9 @@ pipeline {
     stage('Deploy to Production') {
       steps{
         sh '''
-          ssh -i ~/.ssh/id_rsa_deploy ubuntu@34.71.176.18 "if docker ps -q --filter name=nodeapp | grep . ; then docker stop nodeapp ; fi"
-          ssh -i ~/.ssh/id_rsa_deploy ubuntu@34.71.176.18 "if docker ps -a -q --filter name=nodeapp | grep . ; then docker rm -fv nodeapp ; fi"
-          ssh -i ~/.ssh/id_rsa_deploy ubuntu@34.71.176.18 "docker run -d -p 8080:3000 -t --name nodeapp ${CONTAINER_REGISTRY}/${GOOGLE_CLOUD_PROJECT}/nodeapp:latest"
+          ssh -i ~/.ssh/id_rsa_deploy ubuntu@34.133.209.79 "if docker ps -q --filter name=nodeapp | grep . ; then docker stop nodeapp ; fi"
+          ssh -i ~/.ssh/id_rsa_deploy ubuntu@34.133.209.79 "if docker ps -a -q --filter name=nodeapp | grep . ; then docker rm -fv nodeapp ; fi"
+          ssh -i ~/.ssh/id_rsa_deploy ubuntu@34.133.209.79 "docker run -d -p 8080:3000 -t --name nodeapp ${CONTAINER_REGISTRY}/${GOOGLE_CLOUD_PROJECT}/nodeapp:latest"
         '''
       }
     }  
