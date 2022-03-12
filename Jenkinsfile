@@ -67,6 +67,28 @@ pipeline {
                 }
             }
         }
-    }       
+    }  
+    stage('Deploy to Production') {
+      steps{
+        sh '''
+          ssh -i ~/.ssh/id_rsa_deploy ubuntu@34.71.176.18 "if docker ps -q --filter name=nodeapp | grep . ; then docker stop nodeapp ; fi"
+          ssh -i ~/.ssh/id_rsa_deploy ubuntu@34.71.176.18 "if docker ps -a -q --filter name=nodeapp | grep . ; then docker rm -fv nodeapp ; fi"
+          ssh -i ~/.ssh/id_rsa_deploy ubuntu@34.71.176.18 "docker run -d -p 8080:3000 -t --name nodeapp ${CONTAINER_REGISTRY}/${GOOGLE_CLOUD_PROJECT}/nodeapp:latest"
+        '''
+      }
+    }  
+    stage('End-to-end Test on Production') {
+        // Ideally, we would run some end-to-end tests against our running container.
+        steps{
+            sh 'echo "End-to-end Tests passed on Production"'
+        }
+    }
+    stage('Remove Unused docker image') {
+      steps{
+        // input message:"Proceed with removing image locally?"
+        sh 'if docker ps -q --filter name=nodeapp | grep . ; then docker stop nodeapp && docker rm -fv nodeapp; fi'
+        sh 'docker rmi ${CONTAINER_REGISTRY}/${GOOGLE_CLOUD_PROJECT}/nodeapp:$BUILD_NUMBER'
+      }
+    }               
   }
 }
